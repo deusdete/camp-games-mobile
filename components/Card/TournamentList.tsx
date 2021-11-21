@@ -3,10 +3,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { Image, TouchableOpacity, StyleSheet } from 'react-native'
 import { Tournament } from '../../types'
 import { Text, View } from '../Themed'
+import { useNavigation } from '@react-navigation/native';
 
-export default function TournamentCardList(item: Tournament) {
+interface Props {
+  item: Tournament,
+  navigation: any
+}
+
+export default function TournamentCardList({item, navigation}: Props) {
+
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('TournamentDetail', {id: item._id})}>
       <View style={styles.tournamentCard}>
         <Image
           source={{ uri: item.image_host }}

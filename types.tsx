@@ -17,6 +17,17 @@ declare global {
 }
 
 
+export type Banner = {
+  _id: string,
+  name: string,
+  image_host: string,
+  image_name: string,
+  tournament_id: string,
+  user_id: string,
+  created_at: string,
+  updated_at: string,
+}
+
 export type Category = {
   _id: string
   name: string
@@ -46,6 +57,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
   Modal: undefined
   NotFound: undefined
+  TournamentDetail: undefined
 }
 
 export type RootStackScreenProps<

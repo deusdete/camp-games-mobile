@@ -11,7 +11,7 @@ import { Badge, Subheading } from 'react-native-paper'
 
 import EditScreenInfo from '../components/EditScreenInfo'
 import { Text, View } from '../components/Themed'
-import { Category, RootTabScreenProps, Tournament } from '../types'
+import { Banner, Category, RootTabScreenProps, Tournament } from '../types'
 import api from '../services/api'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -122,21 +122,40 @@ const INIT_TOURNAMENT = [
 ]
 
 export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
-  const [catogories, setCategories] = React.useState<Category[]>(
-    INIT_CATEGORIES,
-  )
-  const [tournaments, setTournaments] = React.useState<Tournament[]>(
-    INIT_TOURNAMENT,
-  )
+  const [catogories, setCategories] = React.useState<Category[]>([])
+  const [banners, setBanners] = React.useState<Banner[]>([])
+  const [tournaments, setTournaments] = React.useState<Tournament[]>()
 
   React.useEffect(() => {
-    // loadCategories()
+    loadBanner()
+    loadCategories()
+    loadTournaments()
   }, [])
+
+  async function loadBanner() {
+    try {
+      const res = await api.get('/banner')
+      setBanners(res.data)
+    } catch (error) {
+      console.log('error', JSON.stringify(error))
+    }
+  }
 
   async function loadCategories() {
     try {
       const res = await api.get('/category')
+      console.log('res.data', res.data)
       setCategories(res.data)
+    } catch (error) {
+      console.log('error', JSON.stringify(error))
+    }
+  }
+
+  async function loadTournaments() {
+    try {
+      const res = await api.get('/tournament')
+      console.log('res.data', res.data)
+      setTournaments(res.data)
     } catch (error) {
       console.log('error', JSON.stringify(error))
     }
@@ -148,12 +167,16 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
     </TouchableOpacity>
   )
 
+  function openTournamentDetail(id: string){
+    navigation.navigate('TournamentDetail')
+  }
+
   return (
     <ImageBackground style={styles.container} source={imageBG}>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }} horizontal={false}>
         <View style={styles.swiperView}>
-          <Swiper style={styles.wrapper} autoplay loop>
-            {catogories.map(item => (
+          {banners.length > 0 && <Swiper style={styles.wrapper} autoplay loop>
+            {banners.map(item => (
               <View key={item._id}>
                 <ImageBackground
                   source={{ uri: item.image_host }}
@@ -162,7 +185,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
                 />
               </View>
             ))}
-          </Swiper>
+          </Swiper>}
         </View>
         <View style={styles.categoryView}>
           <Text style={styles.subTitle}>Principais categorias:</Text>
@@ -180,7 +203,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
           <FlatList
             data={tournaments}
             style={styles.tournamentItem}
-            renderItem={({ item }) => TournamentCardList(item)}
+            renderItem={({ item }) => TournamentCardList({item, navigation})}
             keyExtractor={(item) => item._id}
           />
         </View>
