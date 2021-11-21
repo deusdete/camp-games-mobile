@@ -16,7 +16,6 @@ declare global {
   }
 }
 
-declare module "*.png"
 
 export type Category = {
   _id: string
