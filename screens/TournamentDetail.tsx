@@ -23,7 +23,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons'
 import { useRoute } from '@react-navigation/native'
 
 import trophy1 from '../assets/images/trophy1.png'
-import { ActivityIndicator, Colors } from 'react-native-paper'
+import { ActivityIndicator, Colors, FAB  } from 'react-native-paper'
 
 const INIT_TOURNAMENT = {
   _id: '',
@@ -131,6 +131,14 @@ export default function TournamentDetail() {
           </View>
         )}
       </ScrollView>
+      <View style={{marginHorizontal: 16}}>
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          label="QUERO PARTICIPAR"
+          onPress={() => console.log('Pressed')}
+        />
+      </View>
     </View>
   )
 }
@@ -182,5 +190,14 @@ const styles = StyleSheet.create({
   separator: {
     marginBottom: 20,
     height: 1,
+  },
+  fab: {
+    backgroundColor: '#EA5B0C',
+    borderRadius: 6,
+    width: '100%',
+    position: 'absolute',
+    margin: 16,
+    alignSelf: 'center',
+    bottom: 0,
   },
 })

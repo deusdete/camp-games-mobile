@@ -92,10 +92,19 @@ const INIT_TOURNAMENT = [
 ]
 
 export default function TicketsScreen({ navigation }: RootTabScreenProps<'Tickets'>) {
-  const [tournaments, setTournaments] = React.useState<Tournament[]>(
-    INIT_TOURNAMENT,
-  )
+  const [tournaments, setTournaments] = React.useState<Tournament[]>([])
 
+  React.useEffect(() => {
+    loadTickets()
+  }, [])
+  async function loadTickets() {
+    try {
+      const res = await api.get('/ticket')
+      setTournaments(res.data.tournaments)
+    } catch (error) {
+      console.log('error', JSON.stringify(error))
+    }
+  }
 
   return (
     <ImageBackground style={styles.container} source={imageBG}>
@@ -104,7 +113,7 @@ export default function TicketsScreen({ navigation }: RootTabScreenProps<'Ticket
           <FlatList
             data={tournaments}
             style={styles.tournamentItem}
-            renderItem={({ item }) => TournamentCardList(item)}
+            renderItem={({ item }) => TournamentCardList({item, navigation})}
             keyExtractor={(item) => item._id}
           />
         </View>
